@@ -6,7 +6,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Quad", "Quad", "{9CFEE37B-8
 		gl.js = gl.js
 		glUtils.js = glUtils.js
 		index.html = index.html
+		model_projection.vert = model_projection.vert
 		quad.js = quad.js
+		solid_white.frag = solid_white.frag
 	EndProjectSection
 EndProject
 Global
