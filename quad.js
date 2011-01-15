@@ -27,8 +27,8 @@ function initBuffers() {
     gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticesBuffer);
 
     var vertices = [
-    1.0, 1.0, 0.0,
-    -1.0, 1.0, 0.0,
+    1.0, 1.0, -10.0,
+    -1.0, 1.0, -10.0,
     1.0, -1.0, 0.0,
     -1.0, -1.0, 0.0
   ];
@@ -42,7 +42,7 @@ function drawScene() {
     perspectiveMatrix = makePerspective(45, 1.0, 0.1, 100.0);
 
     loadIdentity();
-    mvTranslate([-0.0, 0.0, -6.0]);
+    mvTranslate([-0.0, 0.0, -3.0]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticesBuffer);
     gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
