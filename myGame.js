@@ -119,7 +119,10 @@ function myLoadAssets() {
 var squareRotation = 0.0;
 
 function myUpdateGameState(elapsedTime) {
-    squareRotation += (100 * elapsedTime) / 1000.0;
+    squareRotation += (300 * elapsedTime) / 1000.0;
+
+    var fps = 1000 / elapsedTime;
+    document.getElementById("fps").innerHTML = fps.toPrecision(4).toString();
 }
 
 function myDrawScene(gl) {
@@ -155,6 +158,6 @@ function startMyGame() {
     jfGame.loadAssets = myLoadAssets;
     jfGame.updateGameState = myUpdateGameState;
     jfGame.drawScene = myDrawScene;
-    jfGame.run();
+    jfGame.run("glCanvas");
 }
 
