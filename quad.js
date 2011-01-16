@@ -1,5 +1,5 @@
 
-function initShaders() {
+function loadShaders() {
     var fragmentShader = getShader(gl, "shader-fs");
     var vertexShader = getShader(gl, "shader-vs");
 
@@ -97,7 +97,7 @@ function loadVertexIndices() {
     return cubeVertexIndices;
 }
 
-function initBuffers() {
+function loadAssets() {
     var vertices = loadModel();
     vertexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
@@ -141,46 +141,6 @@ function drawScene() {
     mvPopMatrix();
 }
 
-var mvMatrix;
-var mvMatrixStack = [];
-
-function loadIdentity() {
-    mvMatrix = Matrix.I(4);
-}
-
-function multMatrix(m) {
-    mvMatrix = mvMatrix.x(m);
-}
-
-function mvTranslate(v) {
-    multMatrix(Matrix.Translation($V([v[0], v[1], v[2]])).ensure4x4());
-}
-
-function mvPushMatrix(m) {
-    if (m) {
-        mvMatrixStack.push(m.dup());
-        mvMatrix = m.dup();
-    } else {
-        mvMatrixStack.push(mvMatrix.dup());
-    }
-}
-
-function mvPopMatrix() {
-    if (!mvMatrixStack.length) {
-        throw ("Can't pop from an empty matrix stack.");
-    }
-
-    mvMatrix = mvMatrixStack.pop();
-    return mvMatrix;
-}
-
-function mvRotate(angle, v) {
-    var inRadians = angle * Math.PI / 180.0;
-
-    var m = Matrix.Rotation(inRadians, $V([v[0], v[1], v[2]])).ensure4x4();
-    multMatrix(m);
-}
-
 function setMatrixUniforms() {
     var pUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
     gl.uniformMatrix4fv(pUniform, false, new Float32Array(perspectiveMatrix.flatten()));
@@ -205,20 +165,26 @@ function updateGame() {
     drawScene();
 }
 
-function main() {
-    var canvas = document.getElementById("glCanvas");
-    var gl = initGL(canvas);
-    initShaders();
-    initBuffers();
+var jfGame = new function () {
 
-    gl.clearColor(0.0, 0.5, 1.0, 1.0);
-    gl.clearDepth(1.0);
+    // internal
+    var initializeGraphicsDevice = function () {
+        var canvas = document.getElementById("glCanvas");
+        var gl = initGL(canvas);
+        gl.clearColor(0.0, 0.5, 1.0, 1.0);
+        gl.clearDepth(1.0);
+        gl.enable(gl.DEPTH_TEST);
+        gl.depthFunc(gl.LEQUAL);
+        gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    }
 
-    gl.enable(gl.DEPTH_TEST);
-    gl.depthFunc(gl.LEQUAL);
+    // public
+    this.run = function () {
+        initializeGraphicsDevice();
+        loadAssets();
+        loadShaders();
+        setInterval("updateGame()", 1000 / 60.0);
+    }
 
-    gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-    setInterval("updateGame()", 1000 / 60.0);
 }
