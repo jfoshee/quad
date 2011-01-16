@@ -19,121 +19,11 @@ function loadShaders() {
     vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
     gl.enableVertexAttribArray(vertexPositionAttribute);
 
-//    vertexColorAttribute = gl.getAttribLocation(shaderProgram, "aVertexColor");
-//    gl.enableVertexAttribArray(vertexColorAttribute);
+    vertexColorAttribute = gl.getAttribLocation(shaderProgram, "aVertexColor");
+    gl.enableVertexAttribArray(vertexColorAttribute);
 
     textureCoordAttribute = gl.getAttribLocation(shaderProgram, "aTextureCoord");
     gl.enableVertexAttribArray(textureCoordAttribute);
-}
-
-function loadModel() {
-    var vertices = [
-    // Front face
-    -1.0, -1.0, 1.0,
-     1.0, -1.0, 1.0,
-     1.0, 1.0, 1.0,
-    -1.0, 1.0, 1.0,
-
-    // Back face
-    -1.0, -1.0, -1.0,
-    -1.0, 1.0, -1.0,
-     1.0, 1.0, -1.0,
-     1.0, -1.0, -1.0,
-
-    // Top face
-    -1.0, 1.0, -1.0,
-    -1.0, 1.0, 1.0,
-     1.0, 1.0, 1.0,
-     1.0, 1.0, -1.0,
-
-    // Bottom face
-    -1.0, -1.0, -1.0,
-     1.0, -1.0, -1.0,
-     1.0, -1.0, 1.0,
-    -1.0, -1.0, 1.0,
-
-    // Right face
-     1.0, -1.0, -1.0,
-     1.0, 1.0, -1.0,
-     1.0, 1.0, 1.0,
-     1.0, -1.0, 1.0,
-
-    // Left face
-    -1.0, -1.0, -1.0,
-    -1.0, -1.0, 1.0,
-    -1.0, 1.0, 1.0,
-    -1.0, 1.0, -1.0
-  ];
-  return vertices;
-}
-
-function loadColors() {
-    var colors = [
-    [1.0, 1.0, 1.0, 1.0],    // Front face: white
-    [1.0, 0.0, 0.0, 1.0],    // Back face: red
-    [0.0, 1.0, 0.0, 1.0],    // Top face: green
-    [0.0, 0.0, 1.0, 1.0],    // Bottom face: blue
-    [1.0, 1.0, 0.0, 1.0],    // Right face: yellow
-    [1.0, 0.0, 1.0, 1.0]     // Left face: purple
-  ];
-
-    var generatedColors = [];
-    for (j = 0; j < 6; j++) {
-        var c = colors[j];
-
-        for (var i = 0; i < 4; i++) {
-            generatedColors = generatedColors.concat(c);
-        }
-    }
-    return generatedColors;
-}
-
-function loadVertexIndices() {
-    var cubeVertexIndices = [
-    0, 1, 2, 0, 2, 3,    // front
-    4, 5, 6, 4, 6, 7,    // back
-    8, 9, 10, 8, 10, 11,   // top
-    12, 13, 14, 12, 14, 15,   // bottom
-    16, 17, 18, 16, 18, 19,   // right
-    20, 21, 22, 20, 22, 23    // left
-  ];
-    return cubeVertexIndices;
-}
-
-function loadTextureCoordinates() {
-    var textureCoordinates = [
-    // Front
-    0.0, 0.0,
-    1.0, 0.0,
-    1.0, 1.0,
-    0.0, 1.0,
-    // Back
-    0.0, 0.0,
-    1.0, 0.0,
-    1.0, 1.0,
-    0.0, 1.0,
-    // Top
-    0.0, 0.0,
-    1.0, 0.0,
-    1.0, 1.0,
-    0.0, 1.0,
-    // Bottom
-    0.0, 0.0,
-    1.0, 0.0,
-    1.0, 1.0,
-    0.0, 1.0,
-    // Right
-    0.0, 0.0,
-    1.0, 0.0,
-    1.0, 1.0,
-    0.0, 1.0,
-    // Left
-    0.0, 0.0,
-    1.0, 0.0,
-    1.0, 1.0,
-    0.0, 1.0
-  ];
-    return textureCoordinates;
 }
 
 function handleLoadedTexture(texture) {
@@ -156,7 +46,7 @@ function loadTexture() {
     myTexture.image.src = "texture.png";
 }
 
-function myLoadAssets() {
+function myLoadContent() {
     loadShaders();
     loadTexture();
 
@@ -183,14 +73,14 @@ function myLoadAssets() {
 
 var squareRotation = 0.0;
 
-function myUpdateGameState(elapsedTime) {
-    squareRotation += (300 * elapsedTime) / 1000.0;
+function myUpdate(elapsedTime) {
+    squareRotation += (100 * elapsedTime) / 1000.0;
 
     var fps = 1000 / elapsedTime;
     document.getElementById("fps").innerHTML = fps.toPrecision(4).toString();
 }
 
-function myDrawScene(gl) {
+function myDraw(gl) {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     perspectiveMatrix = makePerspective(45, 1.0, 0.1, 100.0);
@@ -212,8 +102,8 @@ function myDrawScene(gl) {
     gl.vertexAttribPointer(textureCoordAttribute, 2, gl.FLOAT, false, 0, 0);
 
     // Colors
-    //gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-    //gl.vertexAttribPointer(vertexColorAttribute, 4, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+    gl.vertexAttribPointer(vertexColorAttribute, 4, gl.FLOAT, false, 0, 0);
 
     // Vertex Indices
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
@@ -235,9 +125,9 @@ function setShaderUniformParameters() {
 }
 
 function startMyGame() {
-    jfGame.loadAssets = myLoadAssets;
-    jfGame.updateGameState = myUpdateGameState;
-    jfGame.drawScene = myDrawScene;
+    jfGame.loadContent = myLoadContent;
+    jfGame.update = myUpdate;
+    jfGame.draw = myDraw;
     jfGame.run("glCanvas");
 }
 

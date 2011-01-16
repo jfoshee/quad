@@ -2,21 +2,21 @@
 var jfGame = new function () {
 
     // user functions
-    this.updateGameState = null;
-    this.loadAssets = null;
-    this.drawScene = null;
+    this.loadContent = null;
+    this.update = null;
+    this.draw = null;
 
     // public
     this.run = function (canvasId) {
         initializeGraphicsDevice(canvasId);
-        this.loadAssets();
+        this.loadContent();
         setInterval("jfGame.tick()", 1000 / 60.0);
     }
 
     this.tick = function () {
         var elapsedTime = updateTime();
-        this.updateGameState(elapsedTime);
-        this.drawScene(gl);
+        this.update(elapsedTime);
+        this.draw(gl);
     }
 
     // internal
