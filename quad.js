@@ -116,7 +116,7 @@ function loadAssets() {
 
 var squareRotation = 0.0;
 
-function updateGameState() {
+function updateGameState(elapsedTime) {
     squareRotation += (100 * elapsedTime) / 1000.0;
 }
 
@@ -149,22 +149,10 @@ function setMatrixUniforms() {
     gl.uniformMatrix4fv(mvUniform, false, new Float32Array(mvMatrix.flatten()));
 }
 
-var elapsedTime = 0.0;
-var lastTime = 0.0;
-function updateTime() {
-    var currentTime = (new Date).getTime();
-    if (lastTime) {
-        elapsedTime = currentTime - lastTime;
-    }
-    lastTime = currentTime;
-}
 
-function updateGame() {
-    updateTime();
-    updateGameState();
-    drawScene();
-}
 
+jfGameElapsedTime = 0;
+//jfGameLastTime = 0;
 var jfGame = new function () {
 
     // internal
@@ -179,12 +167,34 @@ var jfGame = new function () {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     }
 
+    var initializeTimer = function () {
+        jfGameElapsedTime = 0.0;
+        this.lastTime = 0.0;
+    }
+
+    var updateTime = function () {
+        var currentTime = (new Date).getTime();
+        if (this.lastTime) {
+            jfGameElapsedTime = currentTime - this.lastTime;
+        }
+        this.lastTime = currentTime;
+    }
+
+    // user functions
+
     // public
     this.run = function () {
+        initializeTimer();
         initializeGraphicsDevice();
         loadAssets();
         loadShaders();
-        setInterval("updateGame()", 1000 / 60.0);
+        setInterval("jfGame.tick()", 1000 / 60.0);
+    }
+
+    this.tick = function () {
+        updateTime();
+        updateGameState(jfGameElapsedTime);
+        drawScene();
     }
 
 }
