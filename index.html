@@ -1,37 +1,38 @@
 ﻿<html>
-	<head>
-	<script type="text/javascript" src="sylvester.js"></script>
-	<script type="text/javascript" src="gl.js"></script>
-	<script type="text/javascript" src="glUtils.js"></script>
-	<script type="text/javascript" src="quad.js"></script>
-	<script id="shader-fs" type="x-shader/x-fragment">
-		#ifdef GL_ES
-		precision highp float;
-		#endif
-		varying vec4 vColor;
-		
-		void main(void) {
-			gl_FragColor = vColor;
-		}
-	</script>
-	<script id="shader-vs" type="x-shader/x-vertex">
-	  attribute vec3 aVertexPosition;
-	  attribute vec4 aVertexColor;
-	
-	  uniform mat4 uMVMatrix;
-	  uniform mat4 uPMatrix;
-	  
-	  varying vec4 vColor;
-	
-	  void main(void) {
-		gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-		vColor = aVertexColor;
-	  }
-	</script>
-	</head>
-	<body onload="main();">
-	<canvas id="glCanvas" width=400 height=400>
-	HTML5 Not supported by your web browser.
-	</canvas>
-	</body>
+    <head>
+    <title>quad!</title>
+    <script type="text/javascript" src="sylvester.js"></script>
+    <script type="text/javascript" src="gl.js"></script>
+    <script type="text/javascript" src="glUtils.js"></script>
+    <script type="text/javascript" src="quad.js"></script>
+    <script id="shader-fs" type="x-shader/x-fragment">
+        #ifdef GL_ES
+        precision highp float;
+        #endif
+        varying vec4 vColor;
+        
+        void main(void) {
+            gl_FragColor = vColor;
+        }
+    </script>
+    <script id="shader-vs" type="x-shader/x-vertex">
+      attribute vec3 aVertexPosition;
+      attribute vec4 aVertexColor;
+    
+      uniform mat4 uMVMatrix;
+      uniform mat4 uPMatrix;
+      
+      varying vec4 vColor;
+    
+      void main(void) {
+        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        vColor = aVertexColor;
+      }
+    </script>
+    </head>
+    <body onload="main();">
+    <canvas id="glCanvas" width="400" height="400">
+    HTML5 Not supported by your web browser.
+    </canvas>
+    </body>
 </html>
