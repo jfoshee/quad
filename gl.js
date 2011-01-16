@@ -1,5 +1,4 @@
 
-var gl;
 function initGL(canvas) {
     try {
         gl = canvas.getContext("experimental-webgl");

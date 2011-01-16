@@ -97,7 +97,9 @@ function loadVertexIndices() {
     return cubeVertexIndices;
 }
 
-function loadAssets() {
+function myLoadAssets() {
+    loadShaders();
+
     var vertices = loadModel();
     vertexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
@@ -116,11 +118,11 @@ function loadAssets() {
 
 var squareRotation = 0.0;
 
-function updateGameState(elapsedTime) {
+function myUpdateGameState(elapsedTime) {
     squareRotation += (100 * elapsedTime) / 1000.0;
 }
 
-function drawScene() {
+function myDrawScene(gl) {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     perspectiveMatrix = makePerspective(45, 1.0, 0.1, 100.0);
@@ -149,52 +151,10 @@ function setMatrixUniforms() {
     gl.uniformMatrix4fv(mvUniform, false, new Float32Array(mvMatrix.flatten()));
 }
 
-
-
-jfGameElapsedTime = 0;
-//jfGameLastTime = 0;
-var jfGame = new function () {
-
-    // internal
-    var initializeGraphicsDevice = function () {
-        var canvas = document.getElementById("glCanvas");
-        var gl = initGL(canvas);
-        gl.clearColor(0.0, 0.5, 1.0, 1.0);
-        gl.clearDepth(1.0);
-        gl.enable(gl.DEPTH_TEST);
-        gl.depthFunc(gl.LEQUAL);
-        gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    }
-
-    var initializeTimer = function () {
-        jfGameElapsedTime = 0.0;
-        this.lastTime = 0.0;
-    }
-
-    var updateTime = function () {
-        var currentTime = (new Date).getTime();
-        if (this.lastTime) {
-            jfGameElapsedTime = currentTime - this.lastTime;
-        }
-        this.lastTime = currentTime;
-    }
-
-    // user functions
-
-    // public
-    this.run = function () {
-        initializeTimer();
-        initializeGraphicsDevice();
-        loadAssets();
-        loadShaders();
-        setInterval("jfGame.tick()", 1000 / 60.0);
-    }
-
-    this.tick = function () {
-        updateTime();
-        updateGameState(jfGameElapsedTime);
-        drawScene();
-    }
-
+function startMyGame() {
+    jfGame.loadAssets = myLoadAssets;
+    jfGame.updateGameState = myUpdateGameState;
+    jfGame.drawScene = myDrawScene;
+    jfGame.run();
 }
+
